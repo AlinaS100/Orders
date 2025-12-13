@@ -3,19 +3,22 @@ using MudBlazor;
 using Orders.Frontend.Repositories;
 using Orders.Shared.Entites;
 
-namespace Orders.Frontend.Components.Pages.Categories;
+namespace Orders.Frontend.Components.Pages.States;
 
-public partial class CategoryCreate
+public partial class StateCreate
 {
-    private Category category = new();
+    private State state = new();
 
     [Inject] private IRepository Repository { get; set; } = null!;
     [Inject] private NavigationManager NavigationManager { get; set; } = null!;
     [Inject] private ISnackbar Snackbar { get; set; } = null!;
 
+    [Parameter] public int CountryId { get; set; }
+
     private async Task CreateAsync()
     {
-        var responseHttp = await Repository.PostAsync("/api/categories", category);
+        state.CountryId = CountryId;
+        var responseHttp = await Repository.PostAsync("/api/states", state);
         if (responseHttp.Error)
         {
             var message = await responseHttp.GetErrorMessageAsync();
@@ -29,6 +32,6 @@ public partial class CategoryCreate
 
     private void Return()
     {
-        NavigationManager.NavigateTo("/categories");
+        NavigationManager.NavigateTo($"/countries/details/{CountryId}");
     }
 }

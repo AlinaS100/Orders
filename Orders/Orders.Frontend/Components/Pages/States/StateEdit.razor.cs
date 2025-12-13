@@ -3,11 +3,11 @@ using MudBlazor;
 using Orders.Frontend.Repositories;
 using Orders.Shared.Entites;
 
-namespace Orders.Frontend.Components.Pages.Categories;
+namespace Orders.Frontend.Components.Pages.States;
 
-public partial class CategoryEdit
+public partial class StateEdit
 {
-    private Category? category;
+    private State? state;
 
     [Inject] private NavigationManager NavigationManager { get; set; } = null!;
     [Inject] private IRepository Repository { get; set; } = null!;
@@ -17,13 +17,13 @@ public partial class CategoryEdit
 
     protected override async Task OnInitializedAsync()
     {
-        var responseHttp = await Repository.GetAsync<Category>($"api/categories/{Id}");
+        var responseHttp = await Repository.GetAsync<State>($"api/states/{Id}");
 
         if (responseHttp.Error)
         {
             if (responseHttp.HttpResponseMessage.StatusCode == System.Net.HttpStatusCode.NotFound)
             {
-                NavigationManager.NavigateTo("categories");
+                NavigationManager.NavigateTo("states");
             }
             else
             {
@@ -33,13 +33,13 @@ public partial class CategoryEdit
         }
         else
         {
-            category = responseHttp.Response;
+            state = responseHttp.Response;
         }
     }
 
     private async Task EditAsync()
     {
-        var responseHttp = await Repository.PutAsync("api/categories", category);
+        var responseHttp = await Repository.PutAsync("api/states", state);
 
         if (responseHttp.Error)
         {
@@ -54,6 +54,6 @@ public partial class CategoryEdit
 
     private void Return()
     {
-        NavigationManager.NavigateTo("categories");
+        NavigationManager.NavigateTo($"/countries/details/{state!.CountryId}");
     }
 }
